@@ -1,7 +1,7 @@
-#WemenGotchi
-##Kelompok 3
+# WemenGotchi
+## Kelompok 3
 
-###Dev Team:
+### Dev Team:
 - Bonifasius Martin Wibawa (00000068324)
 - Samuel Maximus Lamere (00000068572)
 - Friedrich Litani Santoso (00000068855)
@@ -11,5 +11,5 @@
 ### Aturan
 Coming Soon
 
-###Catatan
+### Catatan
 Coming Soon
