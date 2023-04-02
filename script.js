@@ -13,14 +13,14 @@ var charStatus = 0
 
 //var untuk tambah kurang stats konstan
 var decMakan = 0.5
-var decMain = 0
+var decMain = 0.25
 var decTidur = 0.5
-var decHealth = 0
+var decObat = 0
 
 var incMakan = 0
 var incMain = 0
 var incTidur = 0
-var incHealth = 0
+var incObat = 0
 var incLevel = 0.5
 
 const round = Math.round
@@ -37,6 +37,9 @@ let vobat = round(document.getElementById("obat").ariaValueNow, 0)
 let wmain = document.getElementById("main")
 let vmain = round(document.getElementById("main").ariaValueNow, 0)
 
+//get element level view
+let levelView = document.getElementById("viewLevel")
+
 function getCharacter() {
   localStorage.setItem("character", document.querySelector(".carousel-item.active").querySelector("img").getAttribute("src"))
   localStorage.setItem("nama", document.getElementById("namaBang").value)
@@ -44,17 +47,36 @@ function getCharacter() {
 
 //ambil dari localstorage
 var nama = localStorage.getItem("nama")
-var character = localStorage.getItem("character")
+const character = localStorage.getItem("character")
 
 //checking jika data sudah masuk ke home
 console.log(character)
 console.log(nama)
 
+//declare/load asset-asset character
+const babynormal =  character + "_baby_normal.gif"
+const babysleep =  character + "_baby_sleep.gif"
+const babyeat =  character + "_baby_eat.gif"
+const babyheal =  character + "_baby_heal.gif"
+const babysick =  character + "_baby_sick.gif"
+
+const teennormal = character + "_teen_normal.gif"
+const teensleep = character + "_teen_sleep.gif"
+const teeneat = character + "_teen_eat.gif"
+const teenheal = character + "_teen_heal.gif"
+const teensick = character + "_teen_sick.gif"
+
+const oldnormal = character + "_old_normal.gif"
+const oldsleep = character + "_old_sleep.gif"
+const oldeat = character + "_old_eat.gif"
+const oldheal = character + "_old_heal.gif"
+const oldsick = character + "_old_sick.gif"
+
 //set character di home
 var charTemp = character;
 var activeChar = document.getElementById("charView")
 
-activeChar.setAttribute("src", charTemp)
+// activeChar.setAttribute("src", charTemp)
 
 const btnMakan = document.querySelector("#btnMakan")
 const btnTidur = document.querySelector("#btnTidur")
@@ -67,6 +89,7 @@ var mainClicked = true;
 var obatClicked = true;
 
 var level = 1;
+var strLevel = "Level " + level
 
 //code untuk gonta-ganti aktivitas
 btnMakan.addEventListener("click", function(){
@@ -76,10 +99,14 @@ btnMakan.addEventListener("click", function(){
 
   if(makanClicked){
     //set character ke character makan
+    charTemp = teeneat
+    activeChar.setAttribute("src", charTemp)
     //tambah sfx makan
     charStatus = 1
   }else{
     //set character ke character awal
+    charTemp = teennormal
+    activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
   makanClicked = !makanClicked
@@ -92,10 +119,14 @@ btnTidur.addEventListener("click", function () {
 
   if (tidurClicked) {
     //set character ke character tidur
+    charTemp = teensleep
+    activeChar.setAttribute("src", charTemp)
     //tambah sfx tidur
     charStatus = 2
   } else {
     //set character ke character awal
+    charTemp = teennormal
+    activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
   tidurClicked = !tidurClicked
@@ -108,10 +139,14 @@ btnObat.addEventListener("click", function () {
 
   if (obatClicked) {
     //set character ke character obat
-    //tambah sfx obat
+    charTemp = teenheal
+    activeChar.setAttribute("src", charTemp)
+    //tambah sfx berobat
     charStatus = 3
   } else {
     //set character ke character awal
+    charTemp = teennormal
+    activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
   obatClicked = !obatClicked
@@ -124,29 +159,308 @@ btnMain.addEventListener("click", function () {
 
   if (mainClicked) {
     //set character ke character main
+    charTemp = teennormal
+    activeChar.setAttribute("src", charTemp)
     //tambah sfx main
     charStatus = 4
   } else {
     //set character ke character awal
+    charTemp = teennormal
+    activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
   mainClicked = !mainClicked
 })
 
-function main(){
-  //belom isi
-  
-  if (vlevel == 100) {
-      vlevel = 0
-      wlevel.style.width = vlevel + "%"
-      
-  }else{
-    vlevel = vlevel + incLevel
-    wlevel.style.width = vlevel + "%"
+
+var paused = false
+
+var intervalMain = setInterval(function () {
+  if (!paused) {
+    main()
   }
+}, 1000)
+
+function pause() {
+  paused = true
 }
 
-setInterval(main, 100)
+function unpause() {
+  paused = false
+}
+
+function main(){
+  if(vmakan==0){
+    clearInterval(intervalMain)
+    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
+    window.location.href = "index.html"
+  }
+  if (vtidur == 0) {
+    clearInterval(intervalMain)
+    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
+    window.location.href = "index.html"
+  }
+  if (vobat == 0) {
+    clearInterval(intervalMain)
+    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
+    window.location.href = "index.html"
+  }
+  if (vmain == 0) {
+    clearInterval(intervalMain)
+    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
+    window.location.href = "index.html"
+  }
+
+  if (vlevel>=100) {
+    level++
+    strLevel = "Level "+level
+    vlevel = 0
+    wlevel.style.width = vlevel + "%"
+    // charTemp = character
+    charStatus = 0
+  }
+
+  levelView.innerText = strLevel
+  activeChar.setAttribute("src", charTemp)
+
+  if (charStatus == 0) {//status idle
+    //redeclare increment/decrement
+    decMakan = 0.75
+    decMain = 0.2
+    decTidur = 0.5
+    decObat = 0.1
+    incLevel = 0.5
+
+    if (jamGame>=20 && jamGame<=24) {
+      decTidur = 0.75
+    }else if(jamGame>=0 && jamGame<=6){
+      decTidur = 0.9
+    }
+
+    if (vmakan<=20) {
+      decObat = 1
+    }
+    if (vobat<20) {
+      charTemp = teensick
+      activeChar.setAttribute("src", charTemp)
+    }
+    if (vmakan<=0) {
+      vmakan = 0
+      wmakan.style.width = vmakan +"%"
+    }else{
+      vmakan-=decMakan
+      wmakan.style.width = vmakan +"%"
+    }
+    if (vtidur <= 0) {
+      vtidur = 0
+      wtidur.style.width = vtidur + "%"
+    } else {
+      vtidur-=decTidur
+      wtidur.style.width = vtidur + "%"
+    }
+    if (vobat <= 0) {
+      vobat = 0
+      wobat.style.width = vobat + "%"
+    } else {
+      vobat -=decObat
+      wobat.style.width = vobat + "%"
+    }
+    if (vmain <= 0) {
+      vmain = 0
+      wmain.style.width = vmain + "%"
+    } else {
+      vmain -=decMain
+      wmain.style.width = vmain + "%"
+    }
+
+    vlevel += incLevel
+    wlevel.style.width = vlevel + "%"
+  }else if (charStatus == 1){//status makan
+    //declare increment/decrement
+    decMakan=0.75
+    decTidur=0.5
+    decMain=0.2
+
+    //increase stat makan dan health ketika makan + increase level
+    incMakan = 5
+    incObat = 1
+    vmakan += incMakan
+    wmakan.style.width = vmakan + "%"
+    vobat += incObat
+    wobat.style.width = vobat +"%"
+
+    incLevel = 1
+    vlevel += incLevel
+    wlevel.style.width=vlevel + "%"
+
+    //decrease stat tidur & main, checking kalo abis
+    if (vtidur <= 0) {
+      vtidur = 0
+      wtidur.style.width = vtidur + "%"
+    } else {
+      vtidur -= decTidur
+      wtidur.style.width = vtidur + "%"
+    }
+    if (vmain <= 0) {
+      vmain = 0
+      wmain.style.width = vmain + "%"
+    } else {
+      vmain -= decMain
+      wmain.style.width = vmain + "%"
+    }
+
+    if (vmakan>99) {
+      charTemp = teennormal
+      activeChar.setAttribute("src", charTemp)
+      charStatus=0
+      makanClicked = !makanClicked
+    }
+  } else if (charStatus == 2) {//status tidur
+    //declare increment/decrement
+    decMakan = 0.25
+    decTidur = 0.5
+    decMain = 0.2
+
+    //increase stat tidur dan health ketika tidur + increase level
+    incTidur = 5
+    incObat = 1
+    vtidur += incTidur
+    wtidur.style.width = vtidur + "%"
+    vobat += incObat
+    wobat.style.width = vobat + "%"
+
+    incLevel = 0.75
+    vlevel += incLevel
+    wlevel.style.width = vlevel + "%"
+
+    //decrease stat tidur makan & main, checking kalo abis
+    if (vtidur <= 0) {
+      vtidur = 0
+      wtidur.style.width = vtidur + "%"
+    } else {
+      vtidur -= decTidur
+      wtidur.style.width = vtidur + "%"
+    }
+    if (vmain <= 0) {
+      vmain = 0
+      wmain.style.width = vmain + "%"
+    } else {
+      vmain -= decMain
+      wmain.style.width = vmain + "%"
+    }
+    if (vmakan <= 0) {
+      vmakan = 0
+      wmakan.style.width = vmakan + "%"
+    } else {
+      vmakan -= decMakan
+      wmakan.style.width = vmakan + "%"
+    }
+
+    if (vtidur > 99) {
+      charTemp = teennormal
+      activeChar.setAttribute("src", charTemp)
+      charStatus = 0
+      tidurClicked = !tidurClicked
+    }
+  } else if (charStatus == 3) {//status berobat
+    //declare increment/decrement
+    decMakan = 0.75
+    decTidur = 0.5
+    decMain = 0.2
+
+    //increase stat health + increase level
+    incObat = 2.5
+    vobat += incObat
+    wobat.style.width = vobat + "%"
+
+    incLevel = 0.75
+    vlevel += incLevel
+    wlevel.style.width = vlevel + "%"
+
+    //decrease stat makan tidur & main, checking kalo abis
+    if (vtidur <= 0) {
+      vtidur = 0
+      wtidur.style.width = vtidur + "%"
+    } else {
+      vtidur -= decTidur
+      wtidur.style.width = vtidur + "%"
+    }
+    if (vmain <= 0) {
+      vmain = 0
+      wmain.style.width = vmain + "%"
+    } else {
+      vmain -= decMain
+      wmain.style.width = vmain + "%"
+    }
+    if (vmakan <= 0) {
+      vmakan = 0
+      wmakan.style.width = vmakan + "%"
+    } else {
+      vmakan -= decMakan
+      wmakan.style.width = vmakan + "%"
+    }
+
+    if (vobat > 99) {
+      charTemp = teennormal
+      activeChar.setAttribute("src", charTemp)
+      charStatus = 0
+      obatClicked = !obatClicked
+    }
+  } else if (charStatus == 4) {//status berobat
+    //declare increment/decrement
+    decMakan = 1.5
+    decTidur = 1
+    decObat = 2
+    decMain = 0
+
+    //increase stat main + increase level
+
+    incMain = 2.5
+    vmain += incMain
+    wmain.style.width = vmain + "%"
+
+    incLevel = 1.5
+    vlevel += incLevel
+    wlevel.style.width = vlevel + "%"
+
+    //decrease stat makan tidur main & obat, checking kalo abis
+    if (vtidur <= 0) {
+      vtidur = 0
+      wtidur.style.width = vtidur + "%"
+    } else {
+      vtidur -= decTidur
+      wtidur.style.width = vtidur + "%"
+    }
+    if (vmain <= 0) {
+      vmain = 0
+      wmain.style.width = vmain + "%"
+    } else {
+      vmain -= decMain
+      wmain.style.width = vmain + "%"
+    }
+    if (vmakan <= 0) {
+      vmakan = 0
+      wmakan.style.width = vmakan + "%"
+    } else {
+      vmakan -= decMakan
+      wmakan.style.width = vmakan + "%"
+    }
+    if (vobat <= 0) {
+      vobat = 0
+      wobat.style.width = vobat + "%"
+    } else {
+      vobat -= decObat
+      wobat.style.width = vobat + "%"
+    }
+
+    if (vmain > 99) {
+      charTemp = teennormal
+      activeChar.setAttribute("src", charTemp)
+      charStatus = 0
+      mainClicked = !mainClicked
+    }
+  }
+}
 
 //Code untuk Clock & Changing Background
 var realStartTime = new Date().getTime();
@@ -183,6 +497,7 @@ function background_change(hrs) {
   }
 }
 
+var jamGame
 function realTime() {
   var currTime = new Date().getTime();
   var elapsedTime = currTime - realStartTime;
@@ -193,6 +508,7 @@ function realTime() {
 
   var hrs = dateTime.getHours();
   var min = dateTime.getMinutes();
+  jamGame = hrs
 
   var timeDisplay = hrs < 10 ? '0' + hrs : hrs;
   timeDisplay += ':';
@@ -203,7 +519,11 @@ function realTime() {
   background_change(hrs);
 }
 //run background change code every 100 ms
-setInterval(realTime, 100);
+setInterval(function () {
+  if (!paused) {
+    realTime()
+  }
+}, 100);
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -285,6 +605,10 @@ $(document).ready(function () {
   }
 
   // Trigger the animation every 1 to 5 seconds
-  setInterval(animate, Math.floor(Math.random() * 10001) + 3000);
+  setInterval(function () {
+    if (!paused) {
+      animate()
+    }
+  }, Math.floor(Math.random() * 10001) + 3000);
 });
 

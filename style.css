@@ -2,7 +2,7 @@ body {
   padding: 1rem 1rem 1rem 1rem;
 }
 
-#bodyhome {
+.bodyBG {
   background-blend-mode:overlay;
 }
 
@@ -14,7 +14,12 @@ body {
   object-fit: contain;
   overflow: hidden;
   width: 32rem;
-  height: 32rem;
+  height: 25rem;
+}
+
+.modal-content{
+  border-radius: 0px;
+  border: 5px solid black;
 }
 
 .modal-body {

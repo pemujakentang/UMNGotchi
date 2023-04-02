@@ -20,7 +20,7 @@
     <link href="https://unpkg.com/nes.css/css/nes.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="bg-info">
+  <body id="bodyindex" class="bg-dark bg-opacity-75" background="assets/backgrounds/backgroundutama.jpg" style="background-blend-mode:soft-light;">
     <div class="position-absolute end-0 me-2">
       <button
         class="nes-btn is-secondary"
@@ -88,7 +88,7 @@
         <div class="modal-dialog modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Help</h1>
+              <h1 class="modal-title fs-5" id="exampleModalLabel">About</h1>
               <button
                 type="button"
                 class="btn-close"
@@ -184,9 +184,13 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <h1 class="">WemenGotchi</h1>
+      <div class="nes-container bg-light bg-opacity-75 d-flex justify-content-center">
+        <h1 class="">WemenGotchi</h1>
+      </div>
     </div>
-    <div class="d-flex justify-content-center mt-4">
+    
+    <div class="d-flex justify-content-center">
+      <div class="nes-container bg-warning bg-opacity-75 d-flex justify-content-center mt-4">
       <form action="home.html" class="">
         <div class="d-flex justify-content-center">
           <h3>Choose Bang Choose</h3>
@@ -224,7 +228,7 @@
           <div class="carousel-inner">
             <div class="carousel-item active">
               <img
-                src="/assets/images/bongo.gif"
+                src="/assets/images/bongo/bongo.gif"
                 class="d-block w-40 img-fluid"
                 alt="..."
               />
@@ -290,6 +294,8 @@
         </div>
       </form>
     </div>
+    </div>
+    
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
