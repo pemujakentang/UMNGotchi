@@ -61,10 +61,12 @@
     - Fitur background sesuai jam permainan (8)
     - Fitur bermain/minigame (12)
 
-- Aspek tambahan
+- Aspek tambahan (+10?)
     - Karakter bisa bergerak bebas dalam div (horizontal), dan pemain bisa drag karakter
     - Fitur pause gameplay + Modal Pause
     - Audio dinamis
     - Exp/Level system dan evolution
     - Modal About dan Help
     - End/Game Over Screen berupa Modal yang diseuaikan kondisi kematian
+
+- Ekspektasi Nilai: 95
