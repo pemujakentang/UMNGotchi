@@ -45,3 +45,6 @@
 - Ada tombol about untuk menampilkan data singkat tim dan tombol bantuan untuk bantuan singkat.
 - Om Fritz adalah maskot kami
 - Github men-detect 88% bahasa yang digunakan CSS karena ada nes.css, file css custom local dan bukan diimport untuk mengantisipasi tidak adanya internet. Sayangnya font tidak bisa local dan harus tetap import dari googlefonts
+
+### Video Demonstrasi
+[![Video Demo](http://img.youtube.com/vi/ugV3NpNUeyk/0.jpg)](https://www.youtube.com/watch?v=ugV3NpNUeyk)
