@@ -34,6 +34,7 @@
     - Untuk keluar dari minigame, pencet Main lagi.
     - Kadang Om Fritz ga mau disentuh, coba disentuh 2 kali.
     - Terkadang permainan akan dimulai dengan skor negatif acak, hal ini untuk mempersulit pemain memenuhi status bar main
+    - Tidak akan bisa pause saat dalam minigame
 10. Ada 3 evolusi peliharaan: Bayi (1-5), Remaja (6-10), dan Dewasa (11 dst.).
 11. Level up akan terjadi apabila bar level up penuh, excess xp tidak akan diakumulasi ke level berikutnya.
 12. Simulasi waktu: 1 detik realtime = 1 menit ingame
@@ -43,3 +44,4 @@
 - Background music seharusnya berjalan otomatis, namun hal itu tergantung browser. Beberapa browser tidak bisa menjalankan bgm secara otomatis.
 - Ada tombol about untuk menampilkan data singkat tim dan tombol bantuan untuk bantuan singkat.
 - Om Fritz adalah maskot kami
+- Github men-detect 88% bahasa yang digunakan CSS karena ada nes.css, file css custom local dan bukan diimport untuk mengantisipasi tidak adanya internet. Sayangnya font tidak bisa local dan harus tetap import dari googlefonts
