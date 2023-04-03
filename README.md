@@ -1,4 +1,4 @@
-# WemenGotchi
+# [WemenGotchi](https://github.com/pemujakentang/UMNGotchi)
 ## Kelas B/Kelompok 3
 
 ### Dev Team:
