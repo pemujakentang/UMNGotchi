@@ -1,5 +1,7 @@
 $(document).ready(function () {
   console.log("ready")
+  var audio = new Audio('/assets/audio/backsound.mp3')
+  audio.play()
 })//check if document ready
 
 /*
@@ -93,6 +95,8 @@ const btnObat = document.querySelector("#btnObat")
 //get containerMain
 const contMain = document.getElementById("containerMain")
 
+const divMove = document.getElementById("divMove")
+
 //get canvas game
 const canvasGame = document.getElementById("canvasGame")
 const ctx = canvasGame.getContext("2d")
@@ -119,6 +123,8 @@ btnMakan.addEventListener("click", function(){
     charTemp = characters[selStage][2]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx makan
+    var audio = new Audio("/assets/audio/sound_eat.mp3")
+    audio.play()
     charStatus = 1
   }else{
     //set character ke character awal
@@ -138,6 +144,8 @@ btnTidur.addEventListener("click", function () {
     charTemp = characters[selStage][1]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx tidur
+    var audio = new Audio("/assets/audio/sound_sleep.mp3")
+    audio.play()
     charStatus = 2
   } else {
     //set character ke character awal
@@ -157,6 +165,8 @@ btnObat.addEventListener("click", function () {
     charTemp = characters[selStage][3]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx berobat
+    var audio = new Audio("/assets/audio/sound_heal.mp3")
+    audio.play()
     charStatus = 3
   } else {
     //set character ke character awal
@@ -178,10 +188,11 @@ btnMain.addEventListener("click", function () {
     activeChar.setAttribute("src", charTemp)
     canvasGame.style.display = "block"
     contMain.style.display = "none"
+    divMove.style.display =""
     pause()
+    var audio = new Audio("/assets/audio/sound_play.mp3")
+    audio.play()
     startGame()
-    //tambah sfx main
-    // charStatus = 4
   } else {
     //set character ke character awal
     charTemp = characters[selStage][0]
@@ -192,7 +203,14 @@ btnMain.addEventListener("click", function () {
     vlevel += score*5
     wlevel.style.width = vlevel + "%"
     score = 0
+
+    vmakan-=5
+    wmakan.style.width = vmakan + "%"
+    vtidur -= 5
+    wtidur.style.width = vtidur + "%"
+
     canvasGame.style.display = "none"
+    divMove.style.display = "none"
     contMain.style.display = ""
     unpause()
     charStatus = 0
@@ -200,7 +218,7 @@ btnMain.addEventListener("click", function () {
   mainClicked = !mainClicked
 })
 
-
+//pause/unpause
 var paused = false
 
 var intervalMain = setInterval(function () {
@@ -217,6 +235,7 @@ function unpause() {
   paused = false
 }
 
+//main function
 function main(){
   if (level<5) {
     selStage = 0
@@ -446,60 +465,6 @@ function main(){
       obatClicked = !obatClicked
     }
   } 
-  // else if (charStatus == 4) {//status bermain
-  //   //declare increment/decrement
-  //   decMakan = 1.5
-  //   decTidur = 1
-  //   decObat = 2
-  //   decMain = 0
-
-  //   //increase stat main + increase level
-
-  //   incMain = 2.5
-  //   vmain += incMain
-  //   wmain.style.width = vmain + "%"
-
-  //   incLevel = 5
-  //   vlevel += incLevel
-  //   wlevel.style.width = vlevel + "%"
-
-  //   //decrease stat makan tidur main & obat, checking kalo abis
-  //   if (vtidur <= 0) {
-  //     vtidur = 0
-  //     wtidur.style.width = vtidur + "%"
-  //   } else {
-  //     vtidur -= decTidur
-  //     wtidur.style.width = vtidur + "%"
-  //   }
-  //   if (vmain <= 0) {
-  //     vmain = 0
-  //     wmain.style.width = vmain + "%"
-  //   } else {
-  //     vmain -= decMain
-  //     wmain.style.width = vmain + "%"
-  //   }
-  //   if (vmakan <= 0) {
-  //     vmakan = 0
-  //     wmakan.style.width = vmakan + "%"
-  //   } else {
-  //     vmakan -= decMakan
-  //     wmakan.style.width = vmakan + "%"
-  //   }
-  //   if (vobat <= 0) {
-  //     vobat = 0
-  //     wobat.style.width = vobat + "%"
-  //   } else {
-  //     vobat -= decObat
-  //     wobat.style.width = vobat + "%"
-  //   }
-
-  //   if (vmain > 99) {
-  //     charTemp = characters[selStage][0]
-  //     activeChar.setAttribute("src", charTemp)
-  //     charStatus = 0
-  //     mainClicked = !mainClicked
-  //   }
-  // }
 }
 
 //Code untuk Clock & Changing Background
@@ -652,6 +617,11 @@ $(document).ready(function () {
   }, Math.floor(Math.random() * 10001) + 3000);
 });
 
+var up = document.getElementById("btnUp")
+var down = document.getElementById("btnDown")
+var left = document.getElementById("btnLeft")
+var right = document.getElementById("btnRight")
+
 var canvas = canvasGame
 var chase = { x: 20, y: 20 };
 var target = { x: 200, y: 200 };
@@ -664,8 +634,23 @@ var scoreView = document.getElementById("score")
 function startGame() {
   gameLoop = setInterval(update, 100);
   document.addEventListener("keydown", changeDirection);
+  left.addEventListener("click", function () {
+    movement = { x: -20, y: 0 };
+    lastMovement = movement;
+  })
+  up.addEventListener("click", function () {
+    movement = { x: 0, y: -20 };
+    lastMovement = movement;
+  })
+  right.addEventListener("click", function () {
+    movement = { x: 20, y: 0 };
+    lastMovement = movement;
+  })
+  down.addEventListener("click", function () {
+    movement = { x: 0, y: 20 };
+    lastMovement = movement;
+  })
   draw();
-
 }
 
 function draw() {
