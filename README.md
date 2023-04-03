@@ -4,7 +4,7 @@
 ### Dev Team:
 - Bonifasius Martin Wibawa/[Martin/Bonbon](https://github.com/pemujakentang) (00000068324)
     - Lead Developer/Coordinator
-    - Algorithm Developer (Minigame, Activity/Status Functions, Data Processing)
+    - Algorithm Developer (Minigame, Activity/Status Functions, Data Processing, General Functions)
     - UI Designer (Wireframe/Layout, General UI Design, Status Bar Design, Draggable Character)
 - Samuel Maximus Lamere/[Sam](https://github.com/SamuelMaxs)  (00000068572)
     - Visual Developer (Character Design, Background Design)
