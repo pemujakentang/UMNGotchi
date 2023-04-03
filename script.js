@@ -121,7 +121,7 @@ btnMakan.addEventListener("click", function(){
     charTemp = characters[selStage][2]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx makan
-    var audio = new Audio("/assets/audio/sound_eat.mp3")
+    var audio = new Audio("assets/audio/sound_eat.mp3")
     audio.play()
     charStatus = 1
   }else{
@@ -142,7 +142,7 @@ btnTidur.addEventListener("click", function () {
     charTemp = characters[selStage][1]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx tidur
-    var audio = new Audio("/assets/audio/sound_sleep.mp3")
+    var audio = new Audio("assets/audio/sound_sleep.mp3")
     audio.play()
     charStatus = 2
   } else {
@@ -163,7 +163,7 @@ btnObat.addEventListener("click", function () {
     charTemp = characters[selStage][3]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx berobat
-    var audio = new Audio("/assets/audio/sound_heal.mp3")
+    var audio = new Audio("assets/audio/sound_heal.mp3")
     audio.play()
     charStatus = 3
   } else {
@@ -187,8 +187,9 @@ btnMain.addEventListener("click", function () {
     canvasGame.style.display = "block"
     contMain.style.display = "none"
     divMove.style.display =""
+    document.getElementById("btnPause").disabled = true
     pause()
-    var audio = new Audio("/assets/audio/sound_play.mp3")
+    var audio = new Audio("assets/audio/sound_play.mp3")
     audio.play()
     startGame()
   } else {
@@ -196,11 +197,11 @@ btnMain.addEventListener("click", function () {
     charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
     clearInterval(gameLoop)
-    vmain+=score*2
+    vmain+=score*5
     wmain.style.width = vmain + "%"
     vlevel += score*5
     wlevel.style.width = vlevel + "%"
-    score = 1
+    score = 0
 
     vmakan-=5
     wmakan.style.width = vmakan + "%"
@@ -211,6 +212,11 @@ btnMain.addEventListener("click", function () {
     divMove.style.display = "none"
     contMain.style.display = ""
     unpause()
+    document.getElementById("btnPause").disabled = false
+    if (vmain >=100) {
+      vmain = 100
+      wmain.style.width = vmain + "%"
+    }
     charStatus = 0
   }
   mainClicked = !mainClicked
@@ -243,24 +249,32 @@ function main(){
     selStage = 2
   }
   if(vmakan==0){
+    if (vobat == 0) {
+      clearInterval(intervalMain)
+      document.getElementById("endLevel").innerText = `Level ${level}`
+      document.getElementById("endMessage").innerText = "Mati Kelaperan... Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh."
+      $('#endModal').modal('show')
+    }
+  }else if (vtidur == 0) {
+    if (vobat==0) {
+      clearInterval(intervalMain)
+      document.getElementById("endLevel").innerText = `Level ${level}`
+      document.getElementById("endMessage").innerText = "Mati Kelelahan... Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh."
+      $('#endModal').modal('show')
+    }
+  }else if (vobat == 0) {
     clearInterval(intervalMain)
-    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
-    window.location.href = "index.html"
+    document.getElementById("endLevel").innerText = `Level ${level}`
+    document.getElementById("endMessage").innerText = "Mati Sengsara... Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh."
+    $('#endModal').modal('show')
   }
-  if (vtidur == 0) {
-    clearInterval(intervalMain)
-    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
-    window.location.href = "index.html"
-  }
-  if (vobat == 0) {
-    clearInterval(intervalMain)
-    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
-    window.location.href = "index.html"
-  }
+  
+  
   if (vmain == 0) {
     clearInterval(intervalMain)
-    alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
-    window.location.href = "index.html"
+    document.getElementById("endLevel").innerText = `Level ${level}`
+    document.getElementById("endMessage").innerText = "Mati Depresi... Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh."
+    $('#endModal').modal('show')
   }
 
   if (vlevel>=100) {
@@ -281,8 +295,8 @@ function main(){
     decMakan = 0.75
     decMain = 0.1
     decTidur = 0.5
-    decObat = 0.1
-    incLevel = 1
+    decObat = 0.25
+    incLevel = 2.5
 
     if (jamGame>=20 && jamGame<=24) {
       decTidur = 0.75
@@ -291,12 +305,12 @@ function main(){
     }
 
     if (vmakan<=20) {
-      decObat += 1
+      decObat += 1.5
     }
     if (vtidur <= 10) {
       decObat += 1
     }
-    if (vobat<20) {
+    if (vobat<35) {
       charTemp = characters[selStage][4]
       activeChar.setAttribute("src", charTemp)
     }
@@ -333,19 +347,19 @@ function main(){
     wlevel.style.width = vlevel + "%"
   }else if (charStatus == 1){//status makan
     //declare increment/decrement
-    decMakan=0.75
-    decTidur=0.5
-    decMain=0.1
+    decMakan=1
+    decTidur=1
+    decMain=0.5
 
     //increase stat makan dan health ketika makan + increase level
     incMakan = 5
-    incObat = 1
+    incObat = 2.5
     vmakan += incMakan
     wmakan.style.width = vmakan + "%"
     vobat += incObat
     wobat.style.width = vobat +"%"
 
-    incLevel = 1
+    incLevel = 5
     vlevel += incLevel
     wlevel.style.width=vlevel + "%"
 
@@ -371,11 +385,14 @@ function main(){
       charStatus=0
       makanClicked = !makanClicked
     }
+    if (vobat >= 100) {
+      vobat = 100
+    }
   } else if (charStatus == 2) {//status tidur
     //declare increment/decrement
-    decMakan = 0.25
-    decTidur = 0.5
-    decMain = 0.2
+    decMakan = 0.5
+    decTidur = 0
+    decMain = 0.75
 
     //increase stat tidur dan health ketika tidur + increase level
     incTidur = 5
@@ -385,7 +402,7 @@ function main(){
     vobat += incObat
     wobat.style.width = vobat + "%"
 
-    incLevel = 0.75
+    incLevel = 4
     vlevel += incLevel
     wlevel.style.width = vlevel + "%"
 
@@ -418,18 +435,20 @@ function main(){
       charStatus = 0
       tidurClicked = !tidurClicked
     }
+    if (vobat >=100) {
+      vobat = 100
+    }
   } else if (charStatus == 3) {//status berobat
     //declare increment/decrement
-    decMakan = 0.75
-    decTidur = 0.5
-    decMain = 0.2
-
+    decMakan = 1
+    decTidur = 1
+    decMain = 1.5
     //increase stat health + increase level
-    incObat = 2.5
+    incObat = 5
     vobat += incObat
     wobat.style.width = vobat + "%"
 
-    incLevel = 0.75
+    incLevel = 4
     vlevel += incLevel
     wlevel.style.width = vlevel + "%"
 
@@ -473,10 +492,10 @@ var images = [
   new Image(),
   new Image()
 ];
-images[0].src = '/assets/backgrounds/PagiGIF.gif';
-images[1].src = '/assets/backgrounds/SiangGIF.gif';
-images[2].src = '/assets/backgrounds/SoreGIF.gif';
-images[3].src = '/assets/backgrounds/MalamGIF.gif';
+images[0].src = 'assets/backgrounds/PagiGIF.gif';
+images[1].src = 'assets/backgrounds/SiangGIF.gif';
+images[2].src = 'assets/backgrounds/SoreGIF.gif';
+images[3].src = 'assets/backgrounds/MalamGIF.gif';
 
 function background_change(hrs) {
   var containerMain = document.getElementById("containerMain")
@@ -626,7 +645,7 @@ var target = { x: 200, y: 200 };
 var movement = { x: 20, y: 0 };
 var lastMovement = movement;
 var gameLoop;
-var score = 1
+var score = 0
 var scoreView = document.getElementById("score")
 
 function startGame() {
@@ -648,6 +667,12 @@ function startGame() {
     movement = { x: 0, y: 20 };
     lastMovement = movement;
   })
+  setInterval(function () {
+    target.x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
+    target.y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
+    score -= 1
+    scoreView.innerText = "Score: " + score
+  }, Math.floor(Math.random() * 6001) + 4000);
   draw();
 }
 
@@ -657,20 +682,13 @@ function draw() {
   imgTarget.onload = function () {
     ctx.drawImage(imgTarget, target.x, target.y, 40, 40);
   };
-  imgTarget.src = "/assets/aibs/omfritz.png";
+  imgTarget.src = "assets/aibs/omfritz.png";
   var imgChase = new Image();
   imgChase.onload = function () {
     ctx.drawImage(imgChase, chase.x, chase.y, 40, 40);
   };
   imgChase.src = characters[selStage][0];
 }
-
-setInterval(function () {
-  target.x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
-  target.y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
-  score -= 1
-  scoreView.innerText = "Score: " + score
-}, Math.floor(Math.random() * 6001) + 4000);
 
 function update() {
   var head = { x: chase.x + movement.x, y: chase.y + movement.y };
