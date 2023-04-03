@@ -1,7 +1,5 @@
 $(document).ready(function () {
   console.log("ready")
-  var audio = new Audio('/assets/audio/backsound.mp3')
-  audio.play()
 })//check if document ready
 
 /*
@@ -202,7 +200,7 @@ btnMain.addEventListener("click", function () {
     wmain.style.width = vmain + "%"
     vlevel += score*5
     wlevel.style.width = vlevel + "%"
-    score = 0
+    score = 1
 
     vmakan-=5
     wmakan.style.width = vmakan + "%"
