@@ -72,9 +72,16 @@ const oldeat = character + "_old_eat.gif"
 const oldheal = character + "_old_heal.gif"
 const oldsick = character + "_old_sick.gif"
 
+const baby = [babynormal, babysleep, babyeat, babyheal, babysick]
+const teen = [teennormal, teensleep, teeneat, teenheal, teensick]
+const old = [oldnormal, oldsleep, oldeat, oldheal, oldsick]
+
+const characters = [baby, teen, old]
+
 //set character di home
-var charTemp = character;
+var charTemp = babynormal;
 var activeChar = document.getElementById("charView")
+activeChar.style.left="40%"
 
 // activeChar.setAttribute("src", charTemp)
 
@@ -82,6 +89,13 @@ const btnMakan = document.querySelector("#btnMakan")
 const btnTidur = document.querySelector("#btnTidur")
 const btnMain = document.querySelector("#btnMain")
 const btnObat = document.querySelector("#btnObat")
+
+//get containerMain
+const contMain = document.getElementById("containerMain")
+
+//get canvas game
+const canvasGame = document.getElementById("canvasGame")
+const ctx = canvasGame.getContext("2d")
 
 var makanClicked = true;
 var tidurClicked = true;
@@ -91,21 +105,24 @@ var obatClicked = true;
 var level = 1;
 var strLevel = "Level " + level
 
+var selStage = 0, selStatus = 0;
+
+var normal, sleep, eat, heal, sick;
+
 //code untuk gonta-ganti aktivitas
 btnMakan.addEventListener("click", function(){
-  tidurClicked=true
-  mainClicked=true  
+  tidurClicked=true  
   obatClicked=true  
 
   if(makanClicked){
     //set character ke character makan
-    charTemp = teeneat
+    charTemp = characters[selStage][2]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx makan
     charStatus = 1
   }else{
     //set character ke character awal
-    charTemp = teennormal
+    charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
@@ -114,18 +131,17 @@ btnMakan.addEventListener("click", function(){
 
 btnTidur.addEventListener("click", function () {
   makanClicked = true
-  mainClicked = true
   obatClicked = true
 
   if (tidurClicked) {
     //set character ke character tidur
-    charTemp = teensleep
+    charTemp = characters[selStage][1]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx tidur
     charStatus = 2
   } else {
     //set character ke character awal
-    charTemp = teennormal
+    charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
@@ -134,18 +150,17 @@ btnTidur.addEventListener("click", function () {
 
 btnObat.addEventListener("click", function () {
   makanClicked = true
-  mainClicked = true
   tidurClicked = true
 
   if (obatClicked) {
     //set character ke character obat
-    charTemp = teenheal
+    charTemp = characters[selStage][3]
     activeChar.setAttribute("src", charTemp)
     //tambah sfx berobat
     charStatus = 3
   } else {
     //set character ke character awal
-    charTemp = teennormal
+    charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
@@ -159,14 +174,27 @@ btnMain.addEventListener("click", function () {
 
   if (mainClicked) {
     //set character ke character main
-    charTemp = teennormal
+    charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
+    canvasGame.style.display = "block"
+    contMain.style.display = "none"
+    pause()
+    startGame()
     //tambah sfx main
-    charStatus = 4
+    // charStatus = 4
   } else {
     //set character ke character awal
-    charTemp = teennormal
+    charTemp = characters[selStage][0]
     activeChar.setAttribute("src", charTemp)
+    clearInterval(gameLoop)
+    vmain+=score*2
+    wmain.style.width = vmain + "%"
+    vlevel += score*5
+    wlevel.style.width = vlevel + "%"
+    score = 0
+    canvasGame.style.display = "none"
+    contMain.style.display = ""
+    unpause()
     charStatus = 0
   }
   mainClicked = !mainClicked
@@ -190,6 +218,13 @@ function unpause() {
 }
 
 function main(){
+  if (level<5) {
+    selStage = 0
+  }else if(level>=5 && level<10){
+    selStage = 1
+  }else if(level>=10){
+    selStage = 2
+  }
   if(vmakan==0){
     clearInterval(intervalMain)
     alert("Ngurus piaraan virtual aja gabisa, boro-boro ngurus jodoh.")
@@ -216,7 +251,8 @@ function main(){
     strLevel = "Level "+level
     vlevel = 0
     wlevel.style.width = vlevel + "%"
-    // charTemp = character
+    charTemp = characters[selStage][0]
+    activeChar.setAttribute("src", charTemp)
     charStatus = 0
   }
 
@@ -226,10 +262,10 @@ function main(){
   if (charStatus == 0) {//status idle
     //redeclare increment/decrement
     decMakan = 0.75
-    decMain = 0.2
+    decMain = 0.1
     decTidur = 0.5
     decObat = 0.1
-    incLevel = 0.5
+    incLevel = 1
 
     if (jamGame>=20 && jamGame<=24) {
       decTidur = 0.75
@@ -238,10 +274,13 @@ function main(){
     }
 
     if (vmakan<=20) {
-      decObat = 1
+      decObat += 1
+    }
+    if (vtidur <= 10) {
+      decObat += 1
     }
     if (vobat<20) {
-      charTemp = teensick
+      charTemp = characters[selStage][4]
       activeChar.setAttribute("src", charTemp)
     }
     if (vmakan<=0) {
@@ -279,7 +318,7 @@ function main(){
     //declare increment/decrement
     decMakan=0.75
     decTidur=0.5
-    decMain=0.2
+    decMain=0.1
 
     //increase stat makan dan health ketika makan + increase level
     incMakan = 5
@@ -310,7 +349,7 @@ function main(){
     }
 
     if (vmakan>99) {
-      charTemp = teennormal
+      charTemp = characters[selStage][0]
       activeChar.setAttribute("src", charTemp)
       charStatus=0
       makanClicked = !makanClicked
@@ -357,7 +396,7 @@ function main(){
     }
 
     if (vtidur > 99) {
-      charTemp = teennormal
+      charTemp = characters[selStage][0]
       activeChar.setAttribute("src", charTemp)
       charStatus = 0
       tidurClicked = !tidurClicked
@@ -401,65 +440,66 @@ function main(){
     }
 
     if (vobat > 99) {
-      charTemp = teennormal
+      charTemp = characters[selStage][0]
       activeChar.setAttribute("src", charTemp)
       charStatus = 0
       obatClicked = !obatClicked
     }
-  } else if (charStatus == 4) {//status berobat
-    //declare increment/decrement
-    decMakan = 1.5
-    decTidur = 1
-    decObat = 2
-    decMain = 0
+  } 
+  // else if (charStatus == 4) {//status bermain
+  //   //declare increment/decrement
+  //   decMakan = 1.5
+  //   decTidur = 1
+  //   decObat = 2
+  //   decMain = 0
 
-    //increase stat main + increase level
+  //   //increase stat main + increase level
 
-    incMain = 2.5
-    vmain += incMain
-    wmain.style.width = vmain + "%"
+  //   incMain = 2.5
+  //   vmain += incMain
+  //   wmain.style.width = vmain + "%"
 
-    incLevel = 1.5
-    vlevel += incLevel
-    wlevel.style.width = vlevel + "%"
+  //   incLevel = 5
+  //   vlevel += incLevel
+  //   wlevel.style.width = vlevel + "%"
 
-    //decrease stat makan tidur main & obat, checking kalo abis
-    if (vtidur <= 0) {
-      vtidur = 0
-      wtidur.style.width = vtidur + "%"
-    } else {
-      vtidur -= decTidur
-      wtidur.style.width = vtidur + "%"
-    }
-    if (vmain <= 0) {
-      vmain = 0
-      wmain.style.width = vmain + "%"
-    } else {
-      vmain -= decMain
-      wmain.style.width = vmain + "%"
-    }
-    if (vmakan <= 0) {
-      vmakan = 0
-      wmakan.style.width = vmakan + "%"
-    } else {
-      vmakan -= decMakan
-      wmakan.style.width = vmakan + "%"
-    }
-    if (vobat <= 0) {
-      vobat = 0
-      wobat.style.width = vobat + "%"
-    } else {
-      vobat -= decObat
-      wobat.style.width = vobat + "%"
-    }
+  //   //decrease stat makan tidur main & obat, checking kalo abis
+  //   if (vtidur <= 0) {
+  //     vtidur = 0
+  //     wtidur.style.width = vtidur + "%"
+  //   } else {
+  //     vtidur -= decTidur
+  //     wtidur.style.width = vtidur + "%"
+  //   }
+  //   if (vmain <= 0) {
+  //     vmain = 0
+  //     wmain.style.width = vmain + "%"
+  //   } else {
+  //     vmain -= decMain
+  //     wmain.style.width = vmain + "%"
+  //   }
+  //   if (vmakan <= 0) {
+  //     vmakan = 0
+  //     wmakan.style.width = vmakan + "%"
+  //   } else {
+  //     vmakan -= decMakan
+  //     wmakan.style.width = vmakan + "%"
+  //   }
+  //   if (vobat <= 0) {
+  //     vobat = 0
+  //     wobat.style.width = vobat + "%"
+  //   } else {
+  //     vobat -= decObat
+  //     wobat.style.width = vobat + "%"
+  //   }
 
-    if (vmain > 99) {
-      charTemp = teennormal
-      activeChar.setAttribute("src", charTemp)
-      charStatus = 0
-      mainClicked = !mainClicked
-    }
-  }
+  //   if (vmain > 99) {
+  //     charTemp = characters[selStage][0]
+  //     activeChar.setAttribute("src", charTemp)
+  //     charStatus = 0
+  //     mainClicked = !mainClicked
+  //   }
+  // }
 }
 
 //Code untuk Clock & Changing Background
@@ -612,3 +652,86 @@ $(document).ready(function () {
   }, Math.floor(Math.random() * 10001) + 3000);
 });
 
+var canvas = canvasGame
+var chase = { x: 20, y: 20 };
+var target = { x: 200, y: 200 };
+var movement = { x: 20, y: 0 };
+var lastMovement = movement;
+var gameLoop;
+var score = 1
+var scoreView = document.getElementById("score")
+
+function startGame() {
+  gameLoop = setInterval(update, 100);
+  document.addEventListener("keydown", changeDirection);
+  draw();
+
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var imgTarget = new Image();
+  imgTarget.onload = function () {
+    ctx.drawImage(imgTarget, target.x, target.y, 40, 40);
+  };
+  imgTarget.src = "/assets/aibs/omfritz.png";
+  var imgChase = new Image();
+  imgChase.onload = function () {
+    ctx.drawImage(imgChase, chase.x, chase.y, 40, 40);
+  };
+  imgChase.src = characters[selStage][0];
+}
+
+setInterval(function () {
+  target.x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
+  target.y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
+  score -= 1
+  scoreView.innerText = "Score: " + score
+}, Math.floor(Math.random() * 6001) + 4000);
+
+function update() {
+  var head = { x: chase.x + movement.x, y: chase.y + movement.y };
+  if (head.x < 10 || head.x + 10 > canvas.width || head.y < 10 || head.y + 10 > canvas.height) {
+    head.x = (head.x + canvas.width) % canvas.width;
+    head.y = (head.y + canvas.height) % canvas.height;
+  }
+  chase = head
+  if (head.x == target.x && head.y == target.y) {
+    target.x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
+    target.y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
+    score += 2
+    scoreView.innerText = score
+    scoreView.innerText = "Score: " + score
+  }
+  draw();
+}
+
+function checkCollision(head) {
+  for (var i = 1; i < chase.length; i++) {
+    if (head.x == chase.x && head.y == chase.y) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function changeDirection(e) {
+  switch (e.keyCode) {
+    case 37:
+      movement = { x: -20, y: 0 };
+      lastMovement = movement;
+      break;
+    case 38:
+      movement = { x: 0, y: -20 };
+      lastMovement = movement;
+      break;
+    case 39:
+      movement = { x: 20, y: 0 };
+      lastMovement = movement;
+      break;
+    case 40:
+      movement = { x: 0, y: 20 };
+      lastMovement = movement;
+      break;
+  }
+}

@@ -1,5 +1,6 @@
 body {
   padding: 1rem 1rem 1rem 1rem;
+  background-size: cover;
 }
 
 .bodyBG {
@@ -120,7 +121,7 @@ body {
 #containerMain {
   height: 30rem;
   background-position: bottom;
-  background-size: 100% 30rem;
+  background-size: cover;
   background-repeat: no-repeat;
   -webkit-transition: background 8s linear;
   -moz-transition: background 8s linear;
@@ -140,5 +141,11 @@ body {
   color: wheat;
   font-size: x-large;
   -webkit-text-stroke: 1px black;
+}
+
+#canvasGame{
+  background-image: url("assets/backgrounds/grass.jpg");
+  background-size: contain;
+  display:none;
 }
 
