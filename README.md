@@ -48,3 +48,23 @@
 
 ### Video Demonstrasi
 [![Video Demo](http://img.youtube.com/vi/ugV3NpNUeyk/0.jpg)](https://www.youtube.com/watch?v=ugV3NpNUeyk)
+
+
+### [Evaluasi](https://www.youtube.com/watch?v=cWrSjCZ5AeE)
+- Aspek yang sudah tercapai
+    - Desain responsif, menarik, lucu, dan unik (15)
+    - Komponen tampilan menarik (avatar, gambar, icon, tombol, dsb.) (15)
+    - Fitur pemilihan avatar di awal permainan (7)
+    - Fitur simulasi jam (7)
+    - Fitur salam (7)
+    - Fitur status dinamis berdasarkan aktivitas karakter (idle maupun aktivitas tertentu) (7 + 7)
+    - Fitur background sesuai jam permainan (8)
+    - Fitur bermain/minigame (12)
+
+- Aspek tambahan
+    - Karakter bisa bergerak bebas dalam div (horizontal), dan pemain bisa drag karakter
+    - Fitur pause gameplay + Modal Pause
+    - Audio dinamis
+    - Exp/Level system dan evolution
+    - Modal About dan Help
+    - End/Game Over Screen berupa Modal yang diseuaikan kondisi kematian
